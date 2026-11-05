@@ -234,16 +234,16 @@
 
     <p class="authors">
       <span class="au"><a href="https://weilixu.com/">Weili Xu</a><sup>1,2,*</sup></span>,
-      <span class="au">Jisen Li<sup>1,*</sup></span>,
-      <span class="au">Yuqing Jian<sup>1,*</sup></span>,
-      <span class="au">Chenxi Li<sup>1</sup></span>,
-      <span class="au">Zhizhou Sha<sup>1,3</sup></span>,
-      <span class="au">Yifan Yu<sup>1,2</sup></span>,
-      <span class="au">Qingyang Wu<sup>1</sup></span>,
-      <span class="au">Chenfeng Xu<sup>1,3</sup></span>,
-      <span class="au">Zhongzhu Zhou<sup>1</sup></span>,
-      <span class="au">Tianyi Zhang<sup>1</sup></span>,
-      <span class="au">Ben Athiwaratkun<sup>1</sup></span>
+      <span class="au"><a href="https://jisenli.me/">Jisen Li</a><sup>1,*</sup></span>,
+      <span class="au"><a href="https://jianyq.github.io/">Yuqing Jian</a><sup>1,*</sup></span>,
+      <span class="au"><a href="https://github.com/connorLi96">Chenxi Li</a><sup>1</sup></span>,
+      <span class="au"><a href="https://jamessand.github.io/">Zhizhou Sha</a><sup>1,3</sup></span>,
+      <span class="au"><a href="https://yifan1130.github.io/">Yifan Yu</a><sup>1,2</sup></span>,
+      <span class="au"><a href="https://qywu.github.io/">Qingyang Wu</a><sup>1</sup></span>,
+      <span class="au"><a href="https://www.chenfengx.com/">Chenfeng Xu</a><sup>1,3</sup></span>,
+      <span class="au"><a href="https://www.zhongzhuzhou.org/">Zhongzhu Zhou</a><sup>1</sup></span>,
+      <span class="au"><a href="https://tonyzhang617.github.io/">Tianyi Zhang</a><sup>1</sup></span>,
+      <span class="au"><a href="https://benathi.github.io/">Ben Athiwaratkun</a><sup>1</sup></span>
     </p>
     <p class="affils"><span><sup>1</sup>Together AI</span><span><sup>2</sup>University of Illinois Urbana-Champaign</span><span><sup>3</sup>The University of Texas at Austin</span></p>
     <p class="note"><sup>*</sup>Equal contribution</p>
@@ -268,7 +268,7 @@
       <div class="stat"><div class="stat-k">68.9 <small>vs 65.4</small></div><div class="stat-v">Qwen3.5-9B NVFP4 average accuracy: QAD against the best PTQ baseline</div></div>
       <div class="stat"><div class="stat-k">66.0 <small>vs 56.4</small></div><div class="stat-v">The same comparison under MXFP4</div></div>
       <div class="stat"><div class="stat-k">2.9&times;</div><div class="stat-v">less GPU memory with rank-16 LoRA-QAD on Qwen3.5-9B at 8K context</div></div>
-      <div class="stat"><div class="stat-k">1.23&times;</div><div class="stat-v">faster RL steps with NVFP4 QARL than BF16 GRPO</div></div>
+      <div class="stat"><div class="stat-k">123.2%</div><div class="stat-v">RL training throughput of NVFP4 QARL relative to BF16 GRPO</div></div>
     </div>
   </div>
 </header>
@@ -512,7 +512,7 @@
       <details class="finding" id="finding-5">
         <summary><span class="f-num">05</span><span>Is quantization-aware RL better than RL followed by quantization?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">Yes, on both speed and quality. NVFP4 QARL makes each RL step 1.23&times; faster and scores 2.7 points higher on five math benchmarks than BF16 RL followed by NVFP4 round-to-nearest quantization.</p>
+          <p class="answer">Yes, on both speed and quality. NVFP4 QARL trains at 123.2% of the BF16 RL throughput and scores 2.7 points higher on five math benchmarks than BF16 RL followed by NVFP4 round-to-nearest quantization.</p>
           <p>Rollouts dominate a GRPO step, and serving them from native NVFP4 weights cuts rollout time from 37.5 s to 28.3 s per step. Qwen3-8B-Base trains on DeepMath-103K for 1,024 steps with 16 rollouts per prompt.</p>
           <div class="f-grid">
             <div>
@@ -563,7 +563,7 @@
       <div class="guide"><h3>Choose activation precision per format</h3><p>Deployment precision alone should not set training precision. For NVFP4 W4A4 deployment, W4A16 training usually wins on accuracy and KL; MXFP4 benefits from W4A4 training.</p></div>
       <div class="guide"><h3>Use LoRA for memory, not for quality</h3><p>Rank-16 LoRA cuts GPU memory 2.9&times; on Qwen3.5-9B at 8K, but a larger rank does not reliably improve accuracy or KL and does not reach full-parameter QAD.</p></div>
       <div class="guide"><h3>Prefer longer sequences at a fixed budget</h3><p>Fewer 32K sequences generalize better than more 4K sequences with the same tokens, and code-domain training also improves math reasoning.</p></div>
-      <div class="guide"><h3>Train RL in the deployment format</h3><p>When native low-precision rollouts are available, QARL beats RL followed by PTQ: 1.23&times; the throughput and 2.7 points higher mean accuracy in the NVFP4 experiment.</p></div>
+      <div class="guide"><h3>Train RL in the deployment format</h3><p>When native low-precision rollouts are available, QARL beats RL followed by PTQ: 123.2% of the throughput and 2.7 points higher mean accuracy in the NVFP4 experiment.</p></div>
     </div>
   </div>
 </section>
