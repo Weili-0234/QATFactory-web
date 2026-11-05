@@ -199,29 +199,6 @@
   .f-fig { margin-top: 18px; }
 
 
-  /* NVFP4 block illustration, under the formats table */
-  .qblock { max-width: 640px; margin: 22px auto 0; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 14px; box-shadow: var(--shadow); text-align: left; min-width: 0; }
-  .qb-head { display: flex; justify-content: space-between; gap: 10px; font: 600 0.76rem var(--mono); color: var(--muted); margin-bottom: 8px; }
-  .qb-head b { color: var(--fg); font-weight: 600; }
-  .qb-row { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 10px; align-items: center; margin-top: 6px; }
-  .qb-lab { font: 500 0.7rem/1.35 var(--mono); color: var(--muted); }
-  .qb-lab b { display: block; color: var(--fg); font-weight: 600; font-size: 0.78rem; }
-  .qb-row svg { width: 100%; height: auto; display: block; }
-  .qb-grid line { stroke: var(--line); stroke-width: 1; }
-  .qb-zero { stroke: var(--faint); stroke-width: 1; }
-  .qb-lat rect { fill: var(--faint); }
-  .qb-q rect { fill: var(--accent); transition: y 0.5s ease, height 0.5s ease; }
-  .qb-lat rect { transition: y 0.5s ease, height 0.5s ease; }
-  .qb-codes { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; margin: 8px 0 0 calc(5.2rem + 10px); }
-  .qb-codes span { font: 600 0.6rem/1 var(--mono); text-align: center; padding: 4px 0; border-radius: 4px; background: var(--accent-tint); color: var(--accent);
-                   transition: background 0.3s ease, color 0.3s ease; white-space: nowrap; overflow: hidden; }
-  .qb-codes span.flip { background: var(--accent); color: var(--on-accent); }
-  @media (max-width: 600px) { .qb-codes { grid-template-columns: repeat(8, minmax(0, 1fr)); margin-left: 0; } .qb-codes span { font-size: 0.68rem; } }
-  .qb-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .qb-tag { font: 500 0.72rem var(--mono); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--accent-soft); color: var(--fg); }
-  .qb-tag.dash { border-style: dashed; border-color: var(--faint); color: var(--muted); }
-  .qb-note { font-size: 0.8rem; color: var(--muted); margin: 10px 0 0; line-height: 1.5; }
-  @media (prefers-reduced-motion: reduce) { .qb-q rect, .qb-lat rect, .qb-codes span { transition: none; } }
 
   /* Evidence charts: dot strips, dumbbells and stacked bars, positioned in the markup */
   .chart { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 14px 16px 10px; min-width: 0; }
@@ -406,14 +383,6 @@
       </table>
     </div>
     <p class="tbl-cap">Supported formats. Bits per weight include element codes and scale metadata. &dagger;The paper lists SGLang for MXFP4; the release notes report that SGLang 0.5.23 does not load dense MXFP4 checkpoints.</p>
-    <div class="qblock" role="img" aria-label="Illustration of one NVFP4 block: 16 latent weights are rounded onto the FP4 grid using one E4M3 block scale and one FP32 tensor scale.">
-      <div class="qb-head"><span><b>NVFP4</b> &middot; one block of 16 weights</span><span>4.50 bits / weight</span></div>
-      <div class="qb-row"><div class="qb-lab"><b>W</b>latent, BF16</div><svg viewBox="0 0 320 64" aria-hidden="true"><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-lat" id="qb-lat"></g></svg></div>
-      <div class="qb-row"><div class="qb-lab"><b>&#373;</b>on the FP4 grid</div><svg viewBox="0 0 320 64" aria-hidden="true"><g class="qb-grid" id="qb-grid"></g><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-q" id="qb-q"></g></svg></div>
-      <div class="qb-codes" id="qb-codes" aria-hidden="true"></div>
-      <div class="qb-tags"><span class="qb-tag">E4M3 block scale &times;1 &middot; <span id="qb-scale">&ndash;</span></span><span class="qb-tag dash">FP32 tensor scale &times;1</span></div>
-      <p class="qb-note">Illustration with made-up weights. Each training step nudges the latent weights. The forward pass scales the block by its largest magnitude, rounds every value onto the FP4 grid and multiplies in BF16.</p>
-    </div>
   </div>
 </section>
 
@@ -813,53 +782,6 @@
     spy();
 
 
-    /* Hero illustration: one NVFP4 block. The weights are made up; only the rounding rule is real. */
-    (function () {
-      var FP4 = [0, 0.5, 1, 1.5, 2, 3, 4, 6];
-      var w = [0.42, -0.13, 0.88, -0.61, 0.05, 0.27, -0.95, 0.33, -0.22, 0.71, -0.48, 0.16, -0.07, 0.59, -0.36, 0.12];
-      var lat = document.getElementById("qb-lat"), qg = document.getElementById("qb-q"), grid = document.getElementById("qb-grid");
-      var codesEl = document.getElementById("qb-codes"), scaleEl = document.getElementById("qb-scale");
-      if (!lat) return;
-      var NS = "http://www.w3.org/2000/svg", H = 28, prev = null, seed = 7;
-      function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
-      function el(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
-      FP4.forEach(function (g) { if (!g) return; [-1, 1].forEach(function (sg) { var y = 32 - sg * g / 6 * H; grid.appendChild(el("line", { x1: 0, x2: 320, y1: y, y2: y })); }); });
-      var latBars = [], qBars = [], chips = [];
-      for (var i = 0; i < 16; i++) {
-        latBars.push(lat.appendChild(el("rect", { x: i * 20 + 4, width: 12, rx: 1.5 })));
-        qBars.push(qg.appendChild(el("rect", { x: i * 20 + 4, width: 12, rx: 1.5 })));
-        chips.push(codesEl.appendChild(document.createElement("span")));
-      }
-      function snap(a) { var best = 0; FP4.forEach(function (g) { if (Math.abs(a - g) < Math.abs(a - best)) best = g; }); return best; }
-      function fmt(c) { return (c < 0 ? "\u2212" : "") + Math.abs(c); }
-      function setBar(r, v) { var h = Math.max(Math.abs(v) * H, 0.6); r.setAttribute("height", h); r.setAttribute("y", v >= 0 ? 32 - h : 32); }
-      function render() {
-        var amax = Math.max.apply(null, w.map(Math.abs)), scale = amax / 6;
-        var codes = w.map(function (v) { return (v < 0 ? -1 : 1) * snap(Math.abs(v) / scale); });
-        w.forEach(function (v, i) {
-          setBar(latBars[i], v / amax);
-          setBar(qBars[i], codes[i] / 6);
-          chips[i].textContent = fmt(codes[i]);
-          chips[i].classList.toggle("flip", !!prev && prev[i] !== codes[i]);
-        });
-        scaleEl.textContent = scale.toFixed(3);
-        prev = codes;
-        setTimeout(function () { chips.forEach(function (c) { c.classList.remove("flip"); }); }, 1200);
-      }
-      function step() { w = w.map(function (v) { return Math.max(-1, Math.min(1, v + (rnd() - 0.5) * 0.16)); }); render(); }
-      render();
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      var timer = null, visible = false;
-      function sync() {
-        var run = visible && !document.hidden;
-        if (run && !timer) timer = setInterval(step, 2400);
-        if (!run && timer) { clearInterval(timer); timer = null; }
-      }
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; sync(); }, { threshold: 0.25 }).observe(lat.closest(".qblock"));
-      } else { visible = true; sync(); }
-      document.addEventListener("visibilitychange", sync);
-    })();
 
     var btn = document.getElementById("copy-bib");
     btn.addEventListener("click", function () {
