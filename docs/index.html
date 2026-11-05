@@ -97,10 +97,26 @@
   .theme-btn svg { width: 16px; height: 16px; }
   @media (max-width: 760px) { .nav-links a { display: none; } }
 
+  /* Outline, top left on wide screens (VideoNSA-style) */
+  .outline { display: none; }
+  @media (min-width: 1180px) {
+    body { padding-left: 200px; }
+    .nav-links a { display: none; }
+    .outline { display: flex; flex-direction: column; gap: 2px; position: fixed; top: 84px; left: 28px; width: 164px; z-index: 15;
+               padding-left: 10px; border-left: 1px solid var(--line); }
+  }
+  .ol-item { margin-left: -11px; padding: 4px 12px; border-left: 2px solid transparent; color: var(--muted); font-size: 0.88rem; font-weight: 500;
+             text-decoration: none; transition: color 0.2s ease, border-color 0.2s ease; }
+  .ol-item:hover { color: var(--fg); border-left-color: var(--accent-soft); }
+  .ol-item.active { color: var(--accent); border-left-color: var(--accent); }
+  .ol-sub { display: flex; flex-direction: column; margin: 0 0 6px 2px; padding-left: 10px; border-left: 1px dashed var(--line); }
+  .ol-sub a { padding: 3px 0 3px 8px; color: var(--faint); font-size: 0.8rem; text-decoration: none; white-space: nowrap; transition: color 0.2s ease, padding-left 0.2s ease; }
+  .ol-sub a:hover { color: var(--fg); padding-left: 12px; }
+  .ol-sub a.active { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .ol-item, .ol-sub a { transition: none; } }
+
   /* Hero */
   .hero { padding-block: 56px 28px; text-align: center; }
-  .venue { display: inline-flex; gap: 8px; align-items: center; font: 500 0.78rem var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
-           color: var(--accent); background: var(--accent-tint); border: 1px solid var(--accent-soft); border-radius: 999px; padding: 4px 12px; margin: 0 0 18px; }
   .wordmark { font-size: clamp(2.6rem, 8vw, 4.6rem); line-height: 1; font-weight: 800; letter-spacing: -0.035em; margin: 0; }
   .wordmark span { color: var(--accent); }
   .subtitle { font-size: clamp(1.12rem, 2.6vw, 1.45rem); line-height: 1.35; font-weight: 600; letter-spacing: -0.01em; margin: 14px auto 0; max-width: 34em; text-wrap: balance; }
@@ -126,13 +142,6 @@
   figcaption b { color: var(--fg); font-weight: 600; }
   .hero-fig { margin-top: 36px; }
 
-  /* At a glance */
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
-  @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 14px; text-align: left; box-shadow: var(--shadow); min-width: 0; }
-  .stat-k { font-size: clamp(1.5rem, 3.6vw, 2rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
-  .stat-k small { font-size: 0.55em; font-weight: 600; color: var(--muted); letter-spacing: 0; }
-  .stat-v { margin-top: 6px; font-size: 0.86rem; line-height: 1.45; color: var(--muted); }
 
   /* Sections */
   section.band { padding-block: 56px; border-top: 1px solid var(--line); }
@@ -147,8 +156,13 @@
   /* Method */
   .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
   @media (max-width: 760px) { .cards { grid-template-columns: minmax(0, 1fr); } }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 8px; box-shadow: var(--shadow); min-width: 0; }
-  .card p { color: var(--muted); font-size: 0.95rem; }
+  .cards { align-items: start; }
+  details.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); min-width: 0; }
+  details.card > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 16px 18px; }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card h3 { margin: 0; }
+  details.card[open] .f-chev { transform: rotate(180deg); }
+  details.card p { color: var(--muted); font-size: 0.95rem; padding: 0 18px 16px; margin: 0; }
   .card .tag { display: inline-block; font: 500 0.7rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
   .method-fig { margin-top: 26px; }
 
@@ -192,7 +206,7 @@
   .tab[aria-selected="true"] { color: var(--accent); border-color: var(--accent-soft); background: var(--accent-tint); }
   .tab-panel[hidden] { display: none; }
 
-  /* Guidelines */
+  /* Takeaways */
   .guides { counter-reset: g; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
   @media (max-width: 760px) { .guides { grid-template-columns: minmax(0, 1fr); } }
   .guide { counter-increment: g; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
@@ -217,7 +231,7 @@
     <div class="nav-links">
       <a href="#method">Method</a>
       <a href="#findings">Findings</a>
-      <a href="#guidelines">Guidelines</a>
+      <a href="#takeaways">Takeaways</a>
       <a href="#citation">Citation</a>
       <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
@@ -226,9 +240,24 @@
   </div>
 </nav>
 
+<nav class="outline" aria-label="On this page">
+  <a class="ol-item" href="#top">Home</a>
+  <a class="ol-item" href="#overview">Overview</a>
+  <a class="ol-item" href="#method">Method</a>
+  <a class="ol-item" href="#findings">Findings</a>
+  <div class="ol-sub">
+    <a href="#finding-1">01 QAD vs PTQ</a>
+    <a href="#finding-2">02 Activation precision</a>
+    <a href="#finding-3">03 LoRA</a>
+    <a href="#finding-4">04 Sequence length</a>
+    <a href="#finding-5">05 QARL</a>
+  </div>
+  <a class="ol-item" href="#takeaways">Takeaways</a>
+  <a class="ol-item" href="#citation">Citation</a>
+</nav>
+
 <header class="hero" id="top">
   <div class="wrap">
-    <p class="venue">arXiv 2609.39223</p>
     <h1 class="wordmark">QAT<span>Factory</span></h1>
     <p class="subtitle">A Versatile, Deployment-Aligned Framework for Quantization-aware Training and Distillation of LLMs</p>
 
@@ -266,12 +295,6 @@
       <figcaption><b>Figure 1.</b> Post-training quantization rounds a trained model and loses accuracy. QATFactory trains the model with quantization in the loop, then exports it to the serving engine without a second lossy conversion. On Qwen3.5-9B under NVFP4, QAD keeps LiveCodeBench and BigCodeBench close to BF16 where RTN and GPTQ drop.</figcaption>
     </figure>
 
-    <div class="stats" aria-label="Results at a glance">
-      <div class="stat"><div class="stat-k">68.9 <small>vs 65.4</small></div><div class="stat-v">Qwen3.5-9B NVFP4 average accuracy: QAD against the best PTQ baseline</div></div>
-      <div class="stat"><div class="stat-k">66.0 <small>vs 56.4</small></div><div class="stat-v">The same comparison under MXFP4</div></div>
-      <div class="stat"><div class="stat-k">2.9&times;</div><div class="stat-v">less GPU memory with rank-16 LoRA-QAD on Qwen3.5-9B at 8K context</div></div>
-      <div class="stat"><div class="stat-k">123.2%</div><div class="stat-v">RL training throughput of NVFP4 QARL relative to BF16 GRPO</div></div>
-    </div>
   </div>
 </header>
 
@@ -296,26 +319,22 @@
     </figure>
 
     <div class="cards">
-      <div class="card">
-        <span class="tag">Numerics</span>
-        <h3>Deployment-aligned simulated quantization</h3>
+      <details class="card">
+        <summary><span class="card-head"><span class="tag">Numerics</span><h3>Deployment-aligned simulated quantization</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <p>Each format implements one quantize-dequantize interface that reproduces the serving format: NVFP4 with E4M3 block scales and an FP32 tensor scale, MXFP4 with E8M0 block scales, and Q4_K super-blocks. Projections that an engine fuses, such as QKV and gate/up, share one scale during training as they do at inference.</p>
-      </div>
-      <div class="card">
-        <span class="tag">QAD</span>
-        <h3>Quantization-aware distillation</h3>
+      </details>
+      <details class="card">
+        <summary><span class="card-head"><span class="tag">QAD</span><h3>Quantization-aware distillation</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <p>The quantized student matches the frozen BF16 model's token distribution under forward KL, on responses the original model generated for Open Perfect Blend prompts. Training is full-parameter with FSDP or LoRA, where the merged weight is what gets fake-quantized. For mixture-of-experts models, full-parameter QAD trains every expert, and LoRA-QAD merges and quantizes one expert at a time to bound peak memory.</p>
-      </div>
-      <div class="card">
-        <span class="tag">QARL</span>
-        <h3>Quantization-aware reinforcement learning</h3>
+      </details>
+      <details class="card">
+        <summary><span class="card-head"><span class="tag">QARL</span><h3>Quantization-aware reinforcement learning</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <p>GRPO rollouts run in vLLM on native NVFP4 weights, so the policy that samples is the policy that ships. After each optimizer step the learner packs its quantized weights and syncs them into the rollout engine.</p>
-      </div>
-      <div class="card">
-        <span class="tag">Export</span>
-        <h3>Engine-native checkpoints</h3>
+      </details>
+      <details class="card">
+        <summary><span class="card-head"><span class="tag">Export</span><h3>Engine-native checkpoints</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <p>The trained latents are packed directly into vLLM compressed-tensors checkpoints for NVFP4 and MXFP4, or into a llama.cpp GGUF for Q4_K. There is no re-quantization and no calibration step after training.</p>
-      </div>
+      </details>
     </div>
 
     <div class="tbl-wrap">
@@ -413,7 +432,7 @@
         </div>
       </details>
 
-      <details class="finding" id="finding-2">
+      <details class="finding" id="finding-2" open>
         <summary><span class="f-num">02</span><span>W4A4 deployment: should training quantize activations too?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
           <p class="answer">It depends on the format. NVFP4 and MXFP4 are both served W4A4, yet NVFP4 checkpoints come out better from weight-only W4A16 training, while MXFP4 gains a lot from W4A4 training.</p>
@@ -434,7 +453,7 @@
         </div>
       </details>
 
-      <details class="finding" id="finding-3">
+      <details class="finding" id="finding-3" open>
         <summary><span class="f-num">03</span><span>Can LoRA make QAD cheaper without losing quality?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
           <p class="answer">It saves memory, not quality. Rank-16 LoRA cuts GPU memory 2.9&times; on Qwen3.5-9B at an 8K sequence length, but every rank trails full-parameter QAD, and a larger rank does not close the gap.</p>
@@ -482,7 +501,7 @@
         </div>
       </details>
 
-      <details class="finding" id="finding-4">
+      <details class="finding" id="finding-4" open>
         <summary><span class="f-num">04</span><span>With a fixed token budget, fewer long sequences or more short ones?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
           <p class="answer">Fewer long ones. At the same number of training tokens, QAD on 32K sequences beats QAD on 4K sequences by 1.9 points on average across AIME25, BigCodeBench and LiveCodeBench-v6.</p>
@@ -511,7 +530,7 @@
         </div>
       </details>
 
-      <details class="finding" id="finding-5">
+      <details class="finding" id="finding-5" open>
         <summary><span class="f-num">05</span><span>Is quantization-aware RL better than RL followed by quantization?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
           <p class="answer">Yes, on both speed and quality. NVFP4 QARL trains at 123.2% of the BF16 RL throughput and scores 2.7 points higher on five math benchmarks than BF16 RL followed by NVFP4 round-to-nearest quantization.</p>
@@ -557,9 +576,9 @@
   </div>
 </section>
 
-<section class="band soft" id="guidelines">
+<section class="band soft" id="takeaways">
   <div class="wrap">
-    <p class="eyebrow">Guidelines</p>
+    <p class="eyebrow">Takeaways</p>
     <h2>Practical advice for low-precision training</h2>
     <div class="guides">
       <div class="guide"><h3>Choose activation precision per format</h3><p>Deployment precision alone should not set training precision. For NVFP4 W4A4 deployment, W4A16 training usually wins on accuracy and KL; MXFP4 benefits from W4A4 training.</p></div>
@@ -635,6 +654,22 @@
     if (location.hash && location.hash.indexOf("#finding-") === 0) {
       var d = document.querySelector(location.hash); if (d) d.open = true;
     }
+
+    var olLinks = Array.prototype.slice.call(document.querySelectorAll(".outline a"));
+    var olTargets = olLinks.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    var ticking = false;
+    function spy() {
+      ticking = false;
+      var main = -1, sub = -1;
+      olTargets.forEach(function (t, i) {
+        if (!t || t.getBoundingClientRect().top > 120) return;
+        if (olLinks[i].parentNode.classList.contains("ol-sub")) sub = i; else main = i;
+      });
+      var inFindings = main >= 0 && olLinks[main].getAttribute("href") === "#findings";
+      olLinks.forEach(function (a, i) { a.classList.toggle("active", i === main || (inFindings && i === sub)); });
+    }
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
+    spy();
 
     var btn = document.getElementById("copy-bib");
     btn.addEventListener("click", function () {
