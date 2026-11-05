@@ -368,12 +368,12 @@
           <p>On Qwen3.5-9B the gap is 3.5 points under NVFP4 and 9.6 points under MXFP4. The same holds for DeepSeek-R1-Distill-Llama-8B, for the Qwen3-30B-A3B and MiniMax-M2.7 mixture-of-experts models, and for llama.cpp's Q4_K.</p>
 
           <div class="tabs" role="tablist" aria-label="Finding 1 views">
-            <button class="tab" role="tab" aria-selected="true" aria-controls="f1-dense" id="f1-dense-tab">Dense, NVFP4 and MXFP4</button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="f1-dense" id="f1-dense-tab" tabindex="-1">Dense, NVFP4 and MXFP4</button>
             <button class="tab" role="tab" aria-selected="false" aria-controls="f1-moe" id="f1-moe-tab" tabindex="-1">MoE and Q4_K</button>
-            <button class="tab" role="tab" aria-selected="false" aria-controls="f1-curves" id="f1-curves-tab" tabindex="-1">Training curves</button>
+            <button class="tab" role="tab" aria-selected="true" aria-controls="f1-curves" id="f1-curves-tab">Training curves</button>
           </div>
 
-          <div class="tab-panel" role="tabpanel" id="f1-dense" aria-labelledby="f1-dense-tab">
+          <div class="tab-panel" role="tabpanel" id="f1-dense" aria-labelledby="f1-dense-tab" hidden>
             <div class="tbl-wrap">
               <table>
                 <thead>
@@ -419,7 +419,7 @@
             <p class="tbl-cap">For the MoE models, Avg covers the four benchmarks and KL is the mean over three corpora. For Q4_K, Avg covers GPQA-D and AIME25, KL is measured on WikiText, and the PTQ baseline is llama.cpp's MSE-optimal quantizer.</p>
           </div>
 
-          <div class="tab-panel" role="tabpanel" id="f1-curves" aria-labelledby="f1-curves-tab" hidden>
+          <div class="tab-panel" role="tabpanel" id="f1-curves" aria-labelledby="f1-curves-tab">
             <figure class="f-fig">
               <div class="plate"><img src="fig/model_grid_overlay.png" width="2666" height="1291" loading="lazy" alt="Training loss, training top-1 agreement, held-out KL and held-out top-1 agreement over QAD training for Qwen3.5-9B and DeepSeek-R1-Distill-Llama-8B under NVFP4 and MXFP4." /></div>
               <figcaption><b>Dense models.</b> Training loss and held-out KL fall while top-1 agreement with the BF16 model rises, for Qwen3.5-9B and DeepSeek-R1-Distill-Llama-8B under NVFP4 and MXFP4.</figcaption>
