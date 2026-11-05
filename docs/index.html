@@ -271,7 +271,7 @@
 
     <figure class="hero-fig">
       <div class="plate"><img src="fig/qatfactory_intro.png" width="1485" height="737" alt="Post-training quantization calibrates and rounds a high-precision model and loses accuracy when deployed. QATFactory trains the model quantization-aware with self-distillation or RL, exports MXFP4, NVFP4 or Q4_K checkpoints losslessly, and deploys them on vLLM, SGLang and llama.cpp. Inset: on Qwen3.5-9B NVFP4, QAD scores 0.830 on LiveCodeBench and 0.297 on BigCodeBench, against 0.637 and 0.250 for RTN, 0.660 and 0.233 for GPTQ, and 0.823 and 0.317 for BF16." /></div>
-      <figcaption><b>Figure 1.</b> Post-training quantization rounds a trained model and loses accuracy. QATFactory trains the model with quantization in the loop, then exports it to the serving engine without a second lossy conversion. On Qwen3.5-9B under NVFP4, QAD keeps LiveCodeBench and BigCodeBench close to BF16 where RTN and GPTQ drop.</figcaption>
+      <figcaption>Post-training quantization rounds a trained model and loses accuracy. QATFactory trains the model with quantization in the loop, then exports it to the serving engine without a second lossy conversion. On Qwen3.5-9B under NVFP4, QAD keeps LiveCodeBench and BigCodeBench close to BF16 where RTN and GPTQ drop.</figcaption>
     </figure>
 
   </div>
@@ -294,7 +294,7 @@
     <p class="lead">QATFactory supports two training workflows: quantization-aware distillation (QAD) and quantization-aware reinforcement learning (QARL). Both share the same quantization-aware layers, format implementations and export pipeline. In the forward pass, these layers apply a lossy quantize-dequantize transformation that reproduces inference-time numerics. In the backward pass, a straight-through estimator (STE) updates the continuous latent weights.</p>
     <figure class="method-fig">
       <div class="plate"><img src="fig/qatfactory.png" width="2112" height="990" loading="lazy" alt="(a) Quantization-aware distillation: training data feeds a frozen BF16 teacher and a quantization-aware student; a distillation loss between them updates the student. (b) Quantization-aware reinforcement learning: a low-precision vLLM rollout engine samples rollouts for each prompt, a reward or verifier scores them, and the quantization-aware learner sends its weights back to the rollout engine. Right: inside a quantization-aware layer, latent weights and activations pass through quantize-dequantize into simulated-quantized tensors that feed a BF16 matmul; the straight-through estimator approximates the gradient with respect to the latent weights by the gradient with respect to the simulated-quantized weights." /></div>
-      <figcaption><b>Figure 2.</b> QAD distills from the frozen BF16 model. QARL samples rollouts from the packed low-precision model in vLLM and syncs the learner's weights back after every step. Both use the quantization-aware layer on the right.</figcaption>
+      <figcaption>QAD distills from the frozen BF16 model. QARL samples rollouts from the packed low-precision model in vLLM and syncs the learner's weights back after every step. Both use the quantization-aware layer on the right.</figcaption>
     </figure>
 
     <div class="cards">
