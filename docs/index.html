@@ -89,31 +89,24 @@
   .brand-mark i { display: block; width: 5px; border-radius: 1.5px; background: var(--accent); }
   .brand-mark i:nth-child(1) { height: 18px; } .brand-mark i:nth-child(2) { height: 12px; opacity: 0.75; } .brand-mark i:nth-child(3) { height: 7px; opacity: 0.5; }
   .nav-links { display: flex; align-items: center; gap: 20px; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.86rem; font-weight: 500; }
+  .nav-links a { position: relative; color: var(--muted); text-decoration: none; font-size: 0.86rem; font-weight: 500; transition: color 0.2s ease; }
   .nav-links a:hover { color: var(--fg); }
+  .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 2px; border-radius: 2px; background: var(--accent);
+                        transform: scaleX(0); transition: transform 0.25s ease; }
+  .nav-links a.active { color: var(--accent); }
+  .nav-links a.active::after { transform: scaleX(1); }
+  .f-at { font: 600 0.72rem var(--mono); color: var(--accent); margin-left: 5px; }
+  .f-at:empty { display: none; }
+  .nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; }
+  .nav-progress i { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+  [id] { scroll-margin-top: 64px; }
+  @media (prefers-reduced-motion: reduce) { .nav-links a, .nav-links a::after { transition: none; } }
   .theme-btn { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; height: 32px; width: 34px;
                display: inline-grid; place-items: center; cursor: pointer; padding: 0; }
   .theme-btn:hover { color: var(--fg); border-color: var(--faint); }
   .theme-btn svg { width: 16px; height: 16px; }
   @media (max-width: 760px) { .nav-links a { display: none; } }
 
-  /* Outline, top left on wide screens (VideoNSA-style) */
-  .outline { display: none; }
-  @media (min-width: 1320px) {
-    .wrap { max-width: min(1080px, calc(100vw - 420px)); }
-    .nav-links a { display: none; }
-    .outline { display: flex; flex-direction: column; gap: 2px; position: fixed; top: 84px; left: max(20px, calc((100vw - 1080px) / 2 - 200px)); width: 164px; z-index: 15;
-               padding-left: 10px; border-left: 1px solid var(--line); }
-  }
-  .ol-item { margin-left: -11px; padding: 4px 12px; border-left: 2px solid transparent; color: var(--muted); font-size: 0.88rem; font-weight: 500;
-             text-decoration: none; transition: color 0.2s ease, border-color 0.2s ease; }
-  .ol-item:hover { color: var(--fg); border-left-color: var(--accent-soft); }
-  .ol-item.active { color: var(--accent); border-left-color: var(--accent); }
-  .ol-sub { display: flex; flex-direction: column; margin: 0 0 6px 2px; padding-left: 10px; border-left: 1px dashed var(--line); }
-  .ol-sub a { padding: 3px 0 3px 8px; color: var(--faint); font-size: 0.8rem; text-decoration: none; white-space: nowrap; transition: color 0.2s ease, padding-left 0.2s ease; }
-  .ol-sub a:hover { color: var(--fg); padding-left: 12px; }
-  .ol-sub a.active { color: var(--accent); }
-  @media (prefers-reduced-motion: reduce) { .ol-item, .ol-sub a { transition: none; } }
 
   /* Hero */
   .hero { padding-block: 56px 28px; text-align: center; }
@@ -230,7 +223,7 @@
     <a class="brand" href="#top" aria-label="QATFactory, back to top"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>QATFactory</a>
     <div class="nav-links">
       <a href="#method">Method</a>
-      <a href="#findings">Findings</a>
+      <a href="#findings">Findings<span class="f-at" id="f-at"></span></a>
       <a href="#takeaways">Takeaways</a>
       <a href="#citation">Citation</a>
       <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme">
@@ -238,23 +231,9 @@
       </button>
     </div>
   </div>
+  <div class="nav-progress" aria-hidden="true"><i id="nav-progress"></i></div>
 </nav>
 
-<nav class="outline" aria-label="On this page">
-  <a class="ol-item" href="#top">Home</a>
-  <a class="ol-item" href="#overview">Overview</a>
-  <a class="ol-item" href="#method">Method</a>
-  <a class="ol-item" href="#findings">Findings</a>
-  <div class="ol-sub">
-    <a href="#finding-1">01 QAD vs PTQ</a>
-    <a href="#finding-2">02 Activation precision</a>
-    <a href="#finding-3">03 LoRA</a>
-    <a href="#finding-4">04 Sequence length</a>
-    <a href="#finding-5">05 QARL</a>
-  </div>
-  <a class="ol-item" href="#takeaways">Takeaways</a>
-  <a class="ol-item" href="#citation">Citation</a>
-</nav>
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -655,20 +634,30 @@
       var d = document.querySelector(location.hash); if (d) d.open = true;
     }
 
-    var olLinks = Array.prototype.slice.call(document.querySelectorAll(".outline a"));
-    var olTargets = olLinks.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
+    var navTargets = navLinks.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    var findingEls = Array.prototype.slice.call(document.querySelectorAll("details.finding"));
+    var fAt = document.getElementById("f-at");
+    var bar = document.getElementById("nav-progress");
     var ticking = false;
     function spy() {
       ticking = false;
-      var main = -1, sub = -1;
-      olTargets.forEach(function (t, i) {
-        if (!t || t.getBoundingClientRect().top > 120) return;
-        if (olLinks[i].parentNode.classList.contains("ol-sub")) sub = i; else main = i;
+      var line = 96, cur = -1, k = 0, root = document.documentElement;
+      var max = root.scrollHeight - window.innerHeight;
+      navTargets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top <= line) cur = i; });
+      if (max > 0 && window.scrollY >= max - 2) cur = navTargets.length - 1;
+      navLinks.forEach(function (a, i) {
+        a.classList.toggle("active", i === cur);
+        if (i === cur) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
-      var inFindings = main >= 0 && olLinks[main].getAttribute("href") === "#findings";
-      olLinks.forEach(function (a, i) { a.classList.toggle("active", i === main || (inFindings && i === sub)); });
+      if (cur >= 0 && navLinks[cur].getAttribute("href") === "#findings") {
+        findingEls.forEach(function (d, i) { if (d.getBoundingClientRect().top <= line) k = i + 1; });
+      }
+      fAt.textContent = k ? "0" + k : "";
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ")";
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
+    window.addEventListener("resize", spy);
     spy();
 
     var btn = document.getElementById("copy-bib");
