@@ -587,9 +587,9 @@
       </details>
 
       <details class="finding" id="finding-4" open>
-        <summary><span class="f-num">04</span><span>At a fixed token budget, should QAD train on fewer samples of up to 32K tokens, or more samples of up to 4K tokens?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <summary><span class="f-num">04</span><span>At a fixed training token budget, should QAD train on fewer, longer samples or more, shorter samples?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">Fewer, longer samples. At the same token budget, training on fewer samples of up to 32K tokens raises average accuracy by 1.9 points over more samples of up to 4K tokens, pooled over four comparisons.</p>
+          <p class="answer">Fewer, longer samples. At the same training token budget, training on fewer samples of up to 32K tokens raises average accuracy by 1.9 points over more samples of up to 4K tokens, pooled over four comparisons.</p>
           <p>32K training wins three comparisons and ties the fourth. It improves AIME25 and LiveCodeBench-v6 every time, while BigCodeBench drops in both W4A4 comparisons. QAD also transfers across domains. Code-trained checkpoints match or beat math-trained ones on AIME25 in three of four settings.</p>
           <div class="chart" role="img" aria-label="Average accuracy over AIME25, BigCodeBench and LiveCodeBench-v6, 4K to 32K training: Served W4A16 Math 51.67 to 54.33; Served W4A16 Code 52.34 to 56.22; Served W4A4 Math 46.44 to 47.45; Served W4A4 Code 49.78 to 49.78. BF16 teacher 57.22.">
             <div class="legend"><span><i class="mk hollow"></i>4K training</span><span><i class="mk disc"></i>32K training, same tokens</span><span><i class="mk teacher" style="height:14px"></i>BF16 teacher, 57.22</span></div>
