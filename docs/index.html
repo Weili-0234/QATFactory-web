@@ -290,8 +290,8 @@
 <section class="band soft" id="method">
   <div class="wrap">
     <p class="eyebrow">Method</p>
-    <h2>One quantization-aware layer, two training modes</h2>
-    <p class="lead">Both QAD and QARL build on the same quantization-aware layer. In the forward pass it quantizes and dequantizes weights, and optionally activations, exactly as the serving kernel will. In the backward pass a straight-through estimator updates continuous latent weights.</p>
+    <h2>Framework overview</h2>
+    <p class="lead">QATFactory supports two training workflows: quantization-aware distillation (QAD) and quantization-aware reinforcement learning (QARL). Both share the same quantization-aware layers, format implementations and export pipeline. In the forward pass, these layers apply a lossy quantize-dequantize transformation that reproduces inference-time numerics. In the backward pass, a straight-through estimator (STE) updates the continuous latent weights.</p>
     <figure class="method-fig">
       <div class="plate"><img src="fig/qatfactory.png" width="2112" height="990" loading="lazy" alt="(a) Quantization-aware distillation: training data feeds a frozen BF16 teacher and a quantization-aware student; a distillation loss between them updates the student. (b) Quantization-aware reinforcement learning: a low-precision vLLM rollout engine samples rollouts for each prompt, a reward or verifier scores them, and the quantization-aware learner sends its weights back to the rollout engine. Right: inside a quantization-aware layer, latent weights and activations pass through quantize-dequantize into simulated-quantized tensors that feed a BF16 matmul; the straight-through estimator approximates the gradient with respect to the latent weights by the gradient with respect to the simulated-quantized weights." /></div>
       <figcaption><b>Figure 2.</b> QAD distills from the frozen BF16 model. QARL samples rollouts from the packed low-precision model in vLLM and syncs the learner's weights back after every step. Both use the quantization-aware layer on the right.</figcaption>
