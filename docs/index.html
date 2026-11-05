@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>QATFactory: Quantization-aware Training and Distillation of LLMs</title>
-<meta name="description" content="QATFactory trains LLMs under the exact low-precision numerics they are deployed with (NVFP4, MXFP4, llama.cpp Q4_K) and exports checkpoints that vLLM, SGLang and llama.cpp load as is." />
+<meta name="description" content="QATFactory trains LLMs under the low-precision format they will be served in. It supports NVFP4, MXFP4 and llama.cpp's Q4_K and exports checkpoints that vLLM and llama.cpp load directly." />
 <meta property="og:title" content="QATFactory: A Versatile, Deployment-Aligned Framework for Quantization-aware Training and Distillation of LLMs" />
 <meta property="og:description" content="Quantization-aware distillation and RL for NVFP4, MXFP4 and Q4_K, from 8B to 230B parameters, with engine-native export." />
 <meta property="og:image" content="https://weilixu.com/QATFactory-web/fig/qatfactory_intro.png" />
@@ -23,7 +23,8 @@
     --line: #dde2e8;
     --fg: #141821;
     --muted: #4f5a68;
-    --faint: #7c8796;
+    --faint: #5f6b7a;
+    --on-accent: #ffffff;
     --accent: #1f63c9;
     --accent-strong: #174fa3;
     --accent-tint: rgba(31, 99, 201, 0.08);
@@ -41,7 +42,7 @@
       --bg: #0e1116; --bg-deep: #0a0c10; --panel: #151a21; --panel-2: #1a2029; --line: #29313c;
       --fg: #e7ebf0; --muted: #a3aebb; --faint: #7d8896; --accent: #6aa6ff; --accent-strong: #8dbbff;
       --accent-tint: rgba(106, 166, 255, 0.10); --accent-soft: rgba(106, 166, 255, 0.20); --ptq: #f07a73;
-      --plate-edge: #29313c; --shadow: none;
+      --plate-edge: #29313c; --shadow: none; --on-accent: #0b0f16;
       color-scheme: dark;
     }
   }
@@ -49,7 +50,7 @@
     --bg: #0e1116; --bg-deep: #0a0c10; --panel: #151a21; --panel-2: #1a2029; --line: #29313c;
     --fg: #e7ebf0; --muted: #a3aebb; --faint: #7d8896; --accent: #6aa6ff; --accent-strong: #8dbbff;
     --accent-tint: rgba(106, 166, 255, 0.10); --accent-soft: rgba(106, 166, 255, 0.20); --ptq: #f07a73;
-    --plate-edge: #29313c; --shadow: none;
+    --plate-edge: #29313c; --shadow: none; --on-accent: #0b0f16;
     color-scheme: dark;
   }
 
@@ -125,8 +126,8 @@
          background: var(--panel); color: var(--fg); text-decoration: none; font-weight: 600; font-size: 0.92rem; box-shadow: var(--shadow); }
   .btn:hover { border-color: var(--faint); color: var(--fg); }
   .btn svg { width: 17px; height: 17px; flex: none; }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
 
   /* Figures on white plates */
   .plate { background: var(--plate); border: 1px solid var(--plate-edge); border-radius: 14px; padding: clamp(10px, 2.4vw, 22px); box-shadow: var(--shadow); }
@@ -169,7 +170,8 @@
   thead tr.grp th:first-child { text-align: left; }
   tbody tr:last-child td { border-bottom: 0; }
   tr.sec td { background: var(--panel-2); color: var(--fg); font-weight: 600; font-size: 0.82rem; text-align: left; }
-  tr.ref td { color: var(--faint); }
+  tr.ref td { color: var(--muted); }
+  tr.total td { font-weight: 600; background: var(--panel-2); }
   tr.ours td { background: var(--accent-tint); }
   tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--accent); font-weight: 600; }
   td.best { font-weight: 700; color: var(--accent); }
@@ -204,7 +206,8 @@
   @media (max-width: 760px) { .guides { grid-template-columns: minmax(0, 1fr); } }
   .guide { counter-increment: g; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); min-width: 0; }
   .guide::before { content: counter(g, decimal-leading-zero); font: 600 0.8rem var(--mono); color: var(--accent); display: block; margin-bottom: 6px; }
-  .guide p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+  .guide p { color: var(--muted); font-size: 0.95rem; margin: 0 0 10px; }
+  .g-link { font-size: 0.86rem; font-weight: 600; text-decoration: none; }
 
   /* Citation */
   .bib { position: relative; margin-top: 16px; }
@@ -270,8 +273,8 @@
     </div>
 
     <figure class="hero-fig">
-      <div class="plate"><img src="fig/qatfactory_intro.png" width="1485" height="737" alt="Post-training quantization calibrates and rounds a high-precision model and loses accuracy when deployed. QATFactory trains the model quantization-aware with self-distillation or RL, exports MXFP4, NVFP4 or Q4_K checkpoints losslessly, and deploys them on vLLM, SGLang and llama.cpp. Inset: on Qwen3.5-9B NVFP4, QAD scores 0.830 on LiveCodeBench and 0.297 on BigCodeBench, against 0.637 and 0.250 for RTN, 0.660 and 0.233 for GPTQ, and 0.823 and 0.317 for BF16." /></div>
-      <figcaption>Post-training quantization rounds a trained model and loses accuracy. QATFactory trains the model with quantization in the loop, then exports it to the serving engine without a second lossy conversion. On Qwen3.5-9B under NVFP4, QAD keeps LiveCodeBench and BigCodeBench close to BF16 where RTN and GPTQ drop.</figcaption>
+      <div class="plate"><img src="fig/qatfactory_intro.png" width="1485" height="737" alt="Two paths from a high-precision model. Top: post-training quantization calibrates and rounds the model, deploys it on vLLM, SGLang or llama.cpp, and loses accuracy. Bottom: QATFactory trains quantization-aware with self-distillation or RL, exports MXFP4, NVFP4 or Q4_K checkpoints, and deploys them on the same engines. Inset, Qwen3.5-9B NVFP4: LiveCodeBench 0.823 BF16, 0.637 RTN, 0.660 GPTQ, 0.830 QAD; BigCodeBench 0.317, 0.250, 0.233, 0.297." /></div>
+      <figcaption>Post-training quantization (PTQ) quantizes a trained model directly and can degrade accuracy. QATFactory trains with quantization in the loop, by self-distillation or reinforcement learning, then exports a deployment-ready checkpoint. On Qwen3.5-9B, its NVFP4 model beats round-to-nearest (RTN) and GPTQ on LiveCodeBench and BigCodeBench.</figcaption>
     </figure>
 
   </div>
@@ -282,8 +285,9 @@
   <div class="wrap">
     <p class="eyebrow">Overview</p>
     <h2>Train in the format you serve</h2>
-    <p class="lead">LLM inference keeps moving to lower precision, and aggressive post-training quantization (PTQ) can cost model quality. QATFactory is an open-source framework for deployment-aligned quantization-aware distillation (QAD) and reinforcement learning (QARL).</p>
-    <p class="muted">It simulates deployment-time quantization while every matrix multiplication runs in BF16, so a model adapts to quantization noise on hardware that lacks the target format: NVFP4 trains on H100 GPUs, which have no FP4 Tensor Cores. It covers NVFP4, MXFP4 and llama.cpp's Q4_K, dense and mixture-of-experts models from 8B to 230B parameters, and full-parameter or LoRA training. Checkpoints export directly to vLLM, SGLang and llama.cpp with no extra lossy conversion and no added inference cost.</p>
+    <p class="lead">Inference keeps moving to lower precision to use the throughput of new accelerators, and aggressive PTQ can degrade model quality. QATFactory is an open-source framework for quantization-aware distillation (QAD) and quantization-aware reinforcement learning (QARL).</p>
+    <p class="muted">Training uses simulated quantization. Weights, and optionally activations, are rounded onto the target format's grid, while every matrix multiplication runs in BF16. A model can therefore train for a format its hardware cannot run: NVFP4 models train on H100 GPUs, which have no FP4 Tensor Cores.</p>
+    <p class="muted">The framework supports NVFP4, MXFP4 and llama.cpp's Q4_K. It trains dense and mixture-of-experts (MoE) models from 8B to 230B parameters, with full-parameter updates or low-rank adaptation (LoRA). Exported checkpoints load in vLLM and llama.cpp with no extra lossy conversion and no added inference cost.</p>
   </div>
 </section>
 
@@ -294,25 +298,25 @@
     <p class="lead">QATFactory supports two training workflows: quantization-aware distillation (QAD) and quantization-aware reinforcement learning (QARL). Both share the same quantization-aware layers, format implementations and export pipeline. In the forward pass, these layers apply a lossy quantize-dequantize transformation that reproduces inference-time numerics. In the backward pass, a straight-through estimator (STE) updates the continuous latent weights.</p>
     <figure class="method-fig">
       <div class="plate"><img src="fig/qatfactory.png" width="2112" height="990" loading="lazy" alt="(a) Quantization-aware distillation: training data feeds a frozen BF16 teacher and a quantization-aware student; a distillation loss between them updates the student. (b) Quantization-aware reinforcement learning: a low-precision vLLM rollout engine samples rollouts for each prompt, a reward or verifier scores them, and the quantization-aware learner sends its weights back to the rollout engine. Right: inside a quantization-aware layer, latent weights and activations pass through quantize-dequantize into simulated-quantized tensors that feed a BF16 matmul; the straight-through estimator approximates the gradient with respect to the latent weights by the gradient with respect to the simulated-quantized weights." /></div>
-      <figcaption>QAD distills from the frozen BF16 model. QARL samples rollouts from the packed low-precision model in vLLM and syncs the learner's weights back after every step. Both use the quantization-aware layer on the right.</figcaption>
+      <figcaption>QAD distills from the frozen high-precision model. QARL samples rollouts from the packed low-precision model in vLLM and syncs the learner's weights back after every step. Both use the quantization-aware layer on the right.</figcaption>
     </figure>
 
     <div class="cards">
       <details class="card">
         <summary><span class="card-head"><span class="tag">Numerics</span><h3>Deployment-aligned simulated quantization</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <p>Each format implements one quantize-dequantize interface that reproduces the serving format: NVFP4 with E4M3 block scales and an FP32 tensor scale, MXFP4 with E8M0 block scales, and Q4_K super-blocks. Projections that an engine fuses, such as QKV and gate/up, share one scale during training as they do at inference.</p>
+        <p>The inference engine acts as the numerical specification: each layer follows the target format's values, block sizes and scaling rules. Under NVFP4, projections that vLLM and SGLang fuse, such as QKV and gate/up, share one tensor scale in training as they do in serving. MXFP4 and Q4_K need no such tying, because neither uses tensor-level scales.</p>
       </details>
       <details class="card">
         <summary><span class="card-head"><span class="tag">QAD</span><h3>Quantization-aware distillation</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <p>The quantized student matches the frozen BF16 model's token distribution under forward KL, on responses the original model generated for Open Perfect Blend prompts. Training is full-parameter with FSDP or LoRA, where the merged weight is what gets fake-quantized. For mixture-of-experts models, full-parameter QAD trains every expert, and LoRA-QAD merges and quantizes one expert at a time to bound peak memory.</p>
+        <p>The quantized student learns to match its frozen original model by minimizing forward KL divergence, on responses the original model generated for Open Perfect Blend prompts. Full-parameter QAD updates every quantized weight. LoRA-QAD shares one frozen base between teacher and student, trains only the adapters and quantizes the merged weight. For MoE models, it merges and quantizes one expert at a time to bound peak memory.</p>
       </details>
       <details class="card">
         <summary><span class="card-head"><span class="tag">QARL</span><h3>Quantization-aware reinforcement learning</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <p>GRPO rollouts run in vLLM on native NVFP4 weights, so the policy that samples is the policy that ships. After each optimizer step the learner packs its quantized weights and syncs them into the rollout engine.</p>
+        <p>A vLLM engine samples GRPO rollouts from the packed NVFP4 policy while the learner trains under simulated quantization. After each step, the learner packs its weights in the engine's layout and syncs them, so the engine needs no requantization.</p>
       </details>
       <details class="card">
         <summary><span class="card-head"><span class="tag">Export</span><h3>Engine-native checkpoints</h3></span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
-        <p>The trained latents are packed directly into vLLM compressed-tensors checkpoints for NVFP4 and MXFP4, or into a llama.cpp GGUF for Q4_K. There is no re-quantization and no calibration step after training.</p>
+        <p>Export packs weights and scales into each engine's native layout: vLLM compressed-tensors checkpoints for NVFP4 and MXFP4, and a llama.cpp GGUF file for Q4_K. NVFP4 activation scales are tracked during training and saved, so no calibration pass runs.</p>
       </details>
     </div>
 
@@ -324,12 +328,14 @@
           <tr><td>Element</td><td>E2M1 (FP4)</td><td>E2M1 (FP4)</td><td>Unsigned INT4</td></tr>
           <tr><td>Block size</td><td>16</td><td>32</td><td>32, in a 256 super-block</td></tr>
           <tr><td>Scales</td><td>Block E4M3, tensor FP32</td><td>Block E8M0</td><td>Block 6-bit, super-block FP16</td></tr>
+          <tr><td>Symmetry</td><td>Symmetric</td><td>Symmetric</td><td>Asymmetric</td></tr>
           <tr><td>Bits per weight</td><td>4.50</td><td>4.25</td><td>4.50</td></tr>
-          <tr><td>Engines</td><td>vLLM, SGLang</td><td>vLLM, SGLang</td><td>llama.cpp</td></tr>
+          <tr><td>Training precision</td><td>W4A16 or W4A4</td><td>W4A16 or W4A4</td><td>W4A16</td></tr>
+          <tr><td>Engines</td><td>vLLM, SGLang</td><td>vLLM, SGLang&dagger;</td><td>llama.cpp</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="tbl-cap">Supported formats. Bits per weight include element codes and scaling metadata.</p>
+    <p class="tbl-cap">Supported formats. Bits per weight include element codes and scale metadata. &dagger;The paper lists SGLang for MXFP4; the release notes report that SGLang 0.5.23 does not load dense MXFP4 checkpoints.</p>
   </div>
 </section>
 
@@ -343,8 +349,8 @@
       <details class="finding" id="finding-1" open>
         <summary><span class="f-num">01</span><span>Does QAD beat post-training quantization across formats, scales and architectures?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">Yes. QAD converges stably from 8B to 230B parameters under NVFP4, MXFP4 and Q4_K, and its exported checkpoints score higher and sit closer to the original model than RTN and GPTQ.</p>
-          <p>On Qwen3.5-9B the gap is 3.5 points under NVFP4 and 9.6 points under MXFP4. The same holds for DeepSeek-R1-Distill-Llama-8B, for the Qwen3-30B-A3B and MiniMax-M2.7 mixture-of-experts models, and for llama.cpp's Q4_K.</p>
+          <p class="answer">Yes. In every model and format tested, exported QAD checkpoints reach higher average accuracy and lower mean KL divergence than the post-training baselines run for that setting.</p>
+          <p>Training stays stable on every model, including the 230B-scale MiniMax-M2.7. The gap is widest on coding. On Qwen3.5-9B under NVFP4, QAD scores 83.0 on LiveCodeBench, where the best baseline scores 66.0.</p>
 
           <div class="tabs" role="tablist" aria-label="Finding 1 views">
             <button class="tab" role="tab" aria-selected="false" aria-controls="f1-dense" id="f1-dense-tab" tabindex="-1">Dense, NVFP4 and MXFP4</button>
@@ -414,8 +420,8 @@
       <details class="finding" id="finding-2" open>
         <summary><span class="f-num">02</span><span>W4A4 deployment: should training quantize activations too?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">It depends on the format. NVFP4 and MXFP4 are both served W4A4, yet NVFP4 checkpoints come out better from weight-only W4A16 training, while MXFP4 gains a lot from W4A4 training.</p>
-          <p>On Qwen3.5-9B, W4A4 training lifts MXFP4 from 57.8 to 66.0 average accuracy. For NVFP4, W4A16 training matches or beats W4A4 on both models. Compare exported checkpoints rather than training-time metrics when picking the training precision.</p>
+          <p class="answer">It depends on the format. For NVFP4, weight-only W4A16 training matches or beats W4A4 training. MXFP4 benefits substantially from W4A4 training.</p>
+          <p>On Qwen3.5-9B under MXFP4, W4A4 training raises average accuracy from 57.8 to 66.0. Under NVFP4 on the same model, the two averages tie and W4A16 training gives the lower KL.</p>
           <div class="tbl-wrap">
             <table>
               <thead>
@@ -435,13 +441,13 @@
       <details class="finding" id="finding-3" open>
         <summary><span class="f-num">03</span><span>Can LoRA make QAD cheaper without losing quality?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">It saves memory, not quality. Rank-16 LoRA cuts GPU memory 2.9&times; on Qwen3.5-9B at an 8K sequence length, but every rank trails full-parameter QAD, and a larger rank does not close the gap.</p>
-          <p>Freezing the base model removes the separate teacher copy and shrinks trainable weights, gradients and FP32 optimizer states to the adapters: the persistent footprint drops from 123.6 GiB to 17.3 GiB, while activations stay about the same.</p>
+          <p class="answer">It saves memory, not quality. Rank-16 LoRA cuts GPU memory 2.9&times; on Qwen3.5-9B at an 8K sequence length. On aggregate metrics every rank still trails full-parameter QAD, and a larger rank does not close the gap.</p>
+          <p>LoRA drops the separate teacher copy and keeps gradients and optimizer states only for the adapters. Quality does not rise with rank. Rank 4 gives the best LoRA average accuracy, and rank 256 the lowest.</p>
           <div class="f-grid">
             <div>
               <div class="tbl-wrap">
                 <table>
-                  <thead><tr><th>GiB per GPU</th><th>Full QAD</th><th>LoRA, r=16</th></tr></thead>
+                  <thead><tr><th>GiB</th><th>Full QAD</th><th>LoRA, r=16</th></tr></thead>
                   <tbody>
                     <tr><td>Teacher weights, BF16</td><td>16.68</td><td>0.00</td></tr>
                     <tr><td>Student weights, frozen BF16</td><td>3.79</td><td>16.68</td></tr>
@@ -450,7 +456,7 @@
                     <tr><td>Optimizer states, FP32</td><td>51.55</td><td>0.32</td></tr>
                     <tr><td>Activations</td><td>32.97</td><td>35.37</td></tr>
                     <tr><td>Temporary</td><td>10.00</td><td>4.50</td></tr>
-                    <tr class="ours"><td>GPU memory in use</td><td>166.53</td><td class="best">57.19</td></tr>
+                    <tr class="total"><td>GPU memory in use</td><td>166.53</td><td>57.19</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -483,8 +489,8 @@
       <details class="finding" id="finding-4" open>
         <summary><span class="f-num">04</span><span>With a fixed token budget, fewer long sequences or more short ones?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">Fewer long ones. At the same number of training tokens, QAD on 32K sequences beats QAD on 4K sequences by 1.9 points on average across AIME25, BigCodeBench and LiveCodeBench-v6.</p>
-          <p>QAD also transfers across domains, most strongly from code training to math reasoning: at 32K, the code-trained checkpoint beats the math-trained one on AIME25 under both W4A16 and W4A4 serving.</p>
+          <p class="answer">Fewer, longer sequences. At the same token budget, QAD on 32K sequences raises average accuracy by 1.9 points over QAD on 4K sequences, pooled over four comparisons.</p>
+          <p>32K training wins three comparisons and ties the fourth. QAD also transfers across domains. Code-trained checkpoints match or beat math-trained ones on AIME25 in three of four settings, and beat them on both coding benchmarks.</p>
           <div class="tbl-wrap">
             <table>
               <thead><tr><th>Inference</th><th>Training data</th><th>Steps</th><th>Tokens (M)</th><th>AIME25 <span class="dir">&uarr;</span></th><th>BCB <span class="dir">&uarr;</span></th><th>LCB-v6 <span class="dir">&uarr;</span></th><th>Avg <span class="dir">&uarr;</span></th></tr></thead>
@@ -512,8 +518,8 @@
       <details class="finding" id="finding-5" open>
         <summary><span class="f-num">05</span><span>Is quantization-aware RL better than RL followed by quantization?</span><svg class="f-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
         <div class="f-body">
-          <p class="answer">Yes, on both speed and quality. NVFP4 QARL trains at 123.2% of the BF16 RL throughput and scores 2.7 points higher on five math benchmarks than BF16 RL followed by NVFP4 round-to-nearest quantization.</p>
-          <p>Rollouts dominate a GRPO step, and serving them from native NVFP4 weights cuts rollout time from 37.5 s to 28.3 s per step. Qwen3-8B-Base trains on DeepMath-103K for 1,024 steps with 16 rollouts per prompt.</p>
+          <p class="answer">Yes, on both speed and quality. NVFP4 QARL trains at 123.2% of BF16 RL's throughput and scores 2.7 points higher on five math benchmarks than BF16 RL followed by RTN.</p>
+          <p>Rollouts dominate each step, and native NVFP4 weights shorten them. That gain more than offsets the slower sync, forward and backward stages. QARL stays within 1.3 points of BF16 RL and slightly beats it on AIME24.</p>
           <div class="f-grid">
             <div>
               <div class="tbl-wrap">
@@ -521,13 +527,13 @@
                   <thead><tr><th>Checkpoint</th><th>Train</th><th>Eval</th><th>Mean <span class="dir">&uarr;</span></th></tr></thead>
                   <tbody>
                     <tr class="ref"><td>Qwen3-8B-Base</td><td>&mdash;</td><td>BF16</td><td>21.0</td></tr>
-                    <tr class="ref"><td>BF16 RL</td><td>BF16</td><td>BF16</td><td>52.1</td></tr>
+                    <tr><td>BF16 RL</td><td>BF16</td><td>BF16</td><td>52.1</td></tr>
                     <tr><td>BF16 RL, then RTN</td><td>BF16</td><td>NVFP4</td><td>48.1</td></tr>
                     <tr class="ours"><td>QARL</td><td>NVFP4</td><td>NVFP4</td><td class="best">50.8</td></tr>
                   </tbody>
                 </table>
               </div>
-              <p class="tbl-cap">Mean accuracy over AIME24, AIME25, MATH500, OlympiadBench and GSM8K.</p>
+              <p class="tbl-cap">Mean accuracy over AIME24, AIME25, MATH500, OlympiadBench and GSM8K. Qwen3-8B-Base trains on DeepMath-103K for 1,024 steps, on four NVIDIA B200 GPUs, because native NVFP4 rollouts need Blackwell Tensor Cores.</p>
             </div>
             <div>
               <div class="tbl-wrap">
@@ -560,10 +566,10 @@
     <p class="eyebrow">Takeaways</p>
     <h2>Practical advice for low-precision training</h2>
     <div class="guides">
-      <div class="guide"><h3>Choose activation precision per format</h3><p>Deployment precision alone should not set training precision. For NVFP4 W4A4 deployment, W4A16 training usually wins on accuracy and KL; MXFP4 benefits from W4A4 training.</p></div>
-      <div class="guide"><h3>Use LoRA for memory, not for quality</h3><p>Rank-16 LoRA cuts GPU memory 2.9&times; on Qwen3.5-9B at 8K, but a larger rank does not reliably improve accuracy or KL and does not reach full-parameter QAD.</p></div>
-      <div class="guide"><h3>Prefer longer sequences at a fixed budget</h3><p>Fewer 32K sequences generalize better than more 4K sequences with the same tokens, and code-domain training also improves math reasoning.</p></div>
-      <div class="guide"><h3>Train RL in the deployment format</h3><p>When native low-precision rollouts are available, QARL beats RL followed by PTQ: 123.2% of the throughput and 2.7 points higher mean accuracy in the NVFP4 experiment.</p></div>
+      <div class="guide"><h3>Choose activation precision per format</h3><p>Deployment precision alone should not set training precision. For NVFP4 W4A4 deployment, W4A16 training generally gives better aggregate accuracy and KL divergence. MXFP4 benefits from W4A4 training. Compare exported checkpoints rather than rely only on training-time metrics.</p><a class="g-link" href="#finding-2">Evidence: Finding 02 &rarr;</a></div>
+      <div class="guide"><h3>Use LoRA for memory, not for quality</h3><p>LoRA cuts training memory substantially. A larger adapter rank does not reliably improve accuracy or KL divergence, and it does not close the gap to full-parameter QAD.</p><a class="g-link" href="#finding-3">Evidence: Finding 03 &rarr;</a></div>
+      <div class="guide"><h3>Prefer longer sequences at a fixed budget</h3><p>Fewer 32K sequences generalize better overall than more 4K sequences with the same number of tokens. QAD updates also transfer across domains. In the paper's experiments, code-domain training improved math reasoning.</p><a class="g-link" href="#finding-4">Evidence: Finding 04 &rarr;</a></div>
+      <div class="guide"><h3>Train RL in the deployment format</h3><p>When native low-precision rollouts are available, combine quantized rollouts with quantization-aware updates. In the paper's NVFP4 experiment, this improved both speed and quality over BF16 RL followed by PTQ.</p><a class="g-link" href="#finding-5">Evidence: Finding 05 &rarr;</a></div>
     </div>
   </div>
 </section>
