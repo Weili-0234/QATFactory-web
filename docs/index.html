@@ -99,10 +99,10 @@
 
   /* Outline, top left on wide screens (VideoNSA-style) */
   .outline { display: none; }
-  @media (min-width: 1180px) {
-    body { padding-left: 200px; }
+  @media (min-width: 1320px) {
+    .wrap { max-width: min(1080px, calc(100vw - 420px)); }
     .nav-links a { display: none; }
-    .outline { display: flex; flex-direction: column; gap: 2px; position: fixed; top: 84px; left: 28px; width: 164px; z-index: 15;
+    .outline { display: flex; flex-direction: column; gap: 2px; position: fixed; top: 84px; left: max(20px, calc((100vw - 1080px) / 2 - 200px)); width: 164px; z-index: 15;
                padding-left: 10px; border-left: 1px solid var(--line); }
   }
   .ol-item { margin-left: -11px; padding: 4px 12px; border-left: 2px solid transparent; color: var(--muted); font-size: 0.88rem; font-weight: 500;
@@ -150,7 +150,7 @@
   h2 { font-size: clamp(1.6rem, 3.6vw, 2.1rem); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 14px; font-weight: 800; }
   h3 { font-size: 1.08rem; line-height: 1.3; margin: 0 0 6px; font-weight: 700; letter-spacing: -0.01em; }
   .lead { font-size: 1.06rem; color: var(--fg); max-width: 46em; margin: 0 0 8px; }
-  p { margin: 0 0 12px; }
+  p { margin: 0 0 12px; text-wrap: pretty; }
   .muted { color: var(--muted); }
 
   /* Method */
@@ -184,8 +184,8 @@
   .dir { color: var(--faint); font-weight: 500; }
 
   /* Findings */
-  .findings { display: grid; gap: 14px; margin-top: 22px; }
-  details.finding { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+  .findings { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 22px; }
+  details.finding { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
   details.finding > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center;
                               padding: 18px 20px; font-weight: 700; font-size: 1.06rem; line-height: 1.35; letter-spacing: -0.01em; }
   details.finding > summary::-webkit-details-marker { display: none; }
@@ -194,7 +194,7 @@
   details.finding[open] .f-chev { transform: rotate(180deg); }
   .f-body { padding: 0 20px 20px; }
   .answer { font-weight: 600; color: var(--fg); }
-  .f-body > p { color: var(--muted); max-width: 52em; }
+  .f-body > p { color: var(--muted); }
   .f-body > p.answer { color: var(--fg); }
   .f-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 8px; }
   @media (max-width: 860px) { .f-grid { grid-template-columns: minmax(0, 1fr); } }
