@@ -199,19 +199,8 @@
   .f-fig { margin-top: 18px; }
 
 
-  /* Hero grid with the quantizer illustration */
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px; align-items: center; text-align: left; }
-  .hero-grid .subtitle, .hero-grid .authors, .hero-grid .affils { margin-left: 0; margin-right: 0; }
-  .hero-grid .affils span { margin: 0 14px 0 0; }
-  .hero-grid .cta { justify-content: flex-start; }
-  @media (max-width: 920px) {
-    .hero-grid { grid-template-columns: minmax(0, 1fr); text-align: center; gap: 28px; }
-    .hero-grid .subtitle, .hero-grid .authors, .hero-grid .affils { margin-left: auto; margin-right: auto; }
-    .hero-grid .affils span { margin: 0 8px; }
-    .hero-grid .cta { justify-content: center; }
-    .qblock { max-width: 480px; margin-inline: auto; }
-  }
-  .qblock { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 14px; box-shadow: var(--shadow); text-align: left; min-width: 0; }
+  /* NVFP4 block illustration, under the formats table */
+  .qblock { max-width: 640px; margin: 22px auto 0; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px 14px; box-shadow: var(--shadow); text-align: left; min-width: 0; }
   .qb-head { display: flex; justify-content: space-between; gap: 10px; font: 600 0.76rem var(--mono); color: var(--muted); margin-bottom: 8px; }
   .qb-head b { color: var(--fg); font-weight: 600; }
   .qb-row { display: grid; grid-template-columns: 5.2rem minmax(0, 1fr); gap: 10px; align-items: center; margin-top: 6px; }
@@ -321,48 +310,36 @@
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div class="hero-grid">
-      <div class="hero-copy">
-      <h1 class="wordmark">QAT<span>Factory</span></h1>
-      <p class="subtitle">A Versatile, Deployment-Aligned Framework for Quantization-aware Training and Distillation of LLMs</p>
+    <h1 class="wordmark">QAT<span>Factory</span></h1>
+    <p class="subtitle">A Versatile, Deployment-Aligned Framework for Quantization-aware Training and Distillation of LLMs</p>
 
-      <p class="authors">
-        <span class="au"><a href="https://weilixu.com/">Weili Xu</a><sup>1,2,*</sup></span>,
-        <span class="au"><a href="https://jisenli.me/">Jisen Li</a><sup>1,*</sup></span>,
-        <span class="au"><a href="https://jianyq.github.io/">Yuqing Jian</a><sup>1,*</sup></span>,
-        <span class="au"><a href="https://github.com/connorLi96">Chenxi Li</a><sup>1</sup></span>,
-        <span class="au"><a href="https://jamessand.github.io/">Zhizhou Sha</a><sup>1,3</sup></span>,
-        <span class="au"><a href="https://yifan1130.github.io/">Yifan Yu</a><sup>1,2</sup></span>,
-        <span class="au"><a href="https://qywu.github.io/">Qingyang Wu</a><sup>1</sup></span>,
-        <span class="au"><a href="https://www.chenfengx.com/">Chenfeng Xu</a><sup>1,3</sup></span>,
-        <span class="au"><a href="https://www.zhongzhuzhou.org/">Zhongzhu Zhou</a><sup>1</sup></span>,
-        <span class="au"><a href="https://tonyzhang617.github.io/">Tianyi Zhang</a><sup>1</sup></span>,
-        <span class="au"><a href="https://benathi.github.io/">Ben Athiwaratkun</a><sup>1</sup></span>
-      </p>
-      <p class="affils"><span><sup>1</sup>Together AI</span><span><sup>2</sup>University of Illinois Urbana-Champaign</span><span><sup>3</sup>The University of Texas at Austin</span></p>
-      <p class="note"><sup>*</sup>Equal contribution</p>
+    <p class="authors">
+      <span class="au"><a href="https://weilixu.com/">Weili Xu</a><sup>1,2,*</sup></span>,
+      <span class="au"><a href="https://jisenli.me/">Jisen Li</a><sup>1,*</sup></span>,
+      <span class="au"><a href="https://jianyq.github.io/">Yuqing Jian</a><sup>1,*</sup></span>,
+      <span class="au"><a href="https://github.com/connorLi96">Chenxi Li</a><sup>1</sup></span>,
+      <span class="au"><a href="https://jamessand.github.io/">Zhizhou Sha</a><sup>1,3</sup></span>,
+      <span class="au"><a href="https://yifan1130.github.io/">Yifan Yu</a><sup>1,2</sup></span>,
+      <span class="au"><a href="https://qywu.github.io/">Qingyang Wu</a><sup>1</sup></span>,
+      <span class="au"><a href="https://www.chenfengx.com/">Chenfeng Xu</a><sup>1,3</sup></span>,
+      <span class="au"><a href="https://www.zhongzhuzhou.org/">Zhongzhu Zhou</a><sup>1</sup></span>,
+      <span class="au"><a href="https://tonyzhang617.github.io/">Tianyi Zhang</a><sup>1</sup></span>,
+      <span class="au"><a href="https://benathi.github.io/">Ben Athiwaratkun</a><sup>1</sup></span>
+    </p>
+    <p class="affils"><span><sup>1</sup>Together AI</span><span><sup>2</sup>University of Illinois Urbana-Champaign</span><span><sup>3</sup>The University of Texas at Austin</span></p>
+    <p class="note"><sup>*</sup>Equal contribution</p>
 
-      <div class="cta">
-        <a class="btn primary" href="https://arxiv.org/pdf/2609.39223">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Paper</a>
-        <a class="btn" href="https://arxiv.org/abs/2609.39223">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9l3 3-3 3M13 15h3"/></svg>arXiv</a>
-        <a class="btn" href="https://github.com/QATFactory/QATFactory">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>Code</a>
-        <a class="btn" href="https://huggingface.co/qatfactory">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg>Models &amp; data</a>
-        <a class="btn" href="#findings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Jump to findings</a>
-      </div>
-      </div>
-      <div class="qblock" role="img" aria-label="Illustration of one NVFP4 block: 16 latent weights are rounded onto the FP4 grid using one E4M3 block scale and one FP32 tensor scale.">
-        <div class="qb-head"><span><b>NVFP4</b> &middot; one block of 16 weights</span><span>4.50 bits / weight</span></div>
-        <div class="qb-row"><div class="qb-lab"><b>W</b>latent, BF16</div><svg viewBox="0 0 320 64" aria-hidden="true"><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-lat" id="qb-lat"></g></svg></div>
-        <div class="qb-row"><div class="qb-lab"><b>&#373;</b>on the FP4 grid</div><svg viewBox="0 0 320 64" aria-hidden="true"><g class="qb-grid" id="qb-grid"></g><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-q" id="qb-q"></g></svg></div>
-        <div class="qb-codes" id="qb-codes" aria-hidden="true"></div>
-        <div class="qb-tags"><span class="qb-tag">E4M3 block scale &times;1 &middot; <span id="qb-scale">&ndash;</span></span><span class="qb-tag dash">FP32 tensor scale &times;1</span></div>
-        <p class="qb-note">Illustration with made-up weights. Each training step nudges the latent weights. The forward pass scales the block by its largest magnitude, rounds every value onto the FP4 grid and multiplies in BF16.</p>
-      </div>
+    <div class="cta">
+      <a class="btn primary" href="https://arxiv.org/pdf/2609.39223">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Paper</a>
+      <a class="btn" href="https://arxiv.org/abs/2609.39223">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9l3 3-3 3M13 15h3"/></svg>arXiv</a>
+      <a class="btn" href="https://github.com/QATFactory/QATFactory">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>Code</a>
+      <a class="btn" href="https://huggingface.co/qatfactory">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg>Models &amp; data</a>
+      <a class="btn" href="#findings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Jump to findings</a>
     </div>
 
     <figure class="hero-fig">
@@ -429,6 +406,14 @@
       </table>
     </div>
     <p class="tbl-cap">Supported formats. Bits per weight include element codes and scale metadata. &dagger;The paper lists SGLang for MXFP4; the release notes report that SGLang 0.5.23 does not load dense MXFP4 checkpoints.</p>
+    <div class="qblock" role="img" aria-label="Illustration of one NVFP4 block: 16 latent weights are rounded onto the FP4 grid using one E4M3 block scale and one FP32 tensor scale.">
+      <div class="qb-head"><span><b>NVFP4</b> &middot; one block of 16 weights</span><span>4.50 bits / weight</span></div>
+      <div class="qb-row"><div class="qb-lab"><b>W</b>latent, BF16</div><svg viewBox="0 0 320 64" aria-hidden="true"><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-lat" id="qb-lat"></g></svg></div>
+      <div class="qb-row"><div class="qb-lab"><b>&#373;</b>on the FP4 grid</div><svg viewBox="0 0 320 64" aria-hidden="true"><g class="qb-grid" id="qb-grid"></g><line class="qb-zero" x1="0" y1="32" x2="320" y2="32"/><g class="qb-q" id="qb-q"></g></svg></div>
+      <div class="qb-codes" id="qb-codes" aria-hidden="true"></div>
+      <div class="qb-tags"><span class="qb-tag">E4M3 block scale &times;1 &middot; <span id="qb-scale">&ndash;</span></span><span class="qb-tag dash">FP32 tensor scale &times;1</span></div>
+      <p class="qb-note">Illustration with made-up weights. Each training step nudges the latent weights. The forward pass scales the block by its largest magnitude, rounds every value onto the FP4 grid and multiplies in BF16.</p>
+    </div>
   </div>
 </section>
 
